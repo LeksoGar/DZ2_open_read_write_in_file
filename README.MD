@@ -4,5 +4,6 @@
 Файл: 'main.py' в общей папке
 
 ## Задача №3
-Код файл: 'unification.py' в папке 'exercise_3'
+Код файл: 'unification.py' в папке 'exercise_3'  
+
 Результат: 'result.txt'
