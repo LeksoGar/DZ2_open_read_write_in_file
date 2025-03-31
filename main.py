@@ -1,3 +1,6 @@
+from tkinter.constants import SEPARATOR
+
+
 def read_recipes(file_path):
     cook_book = {}
     with open(file_path, 'r', encoding='utf-8') as f:
@@ -6,7 +9,11 @@ def read_recipes(file_path):
             if not dish_name:
                 break
 
-            ingredients_count = int(f.readline().strip())
+            try:
+                ingredients_count = int(f.readline().strip())
+            except ValueError:
+                print(f"Ошибка: ожидалось целое число после названия блюда '{dish_name}'")
+                continue
             ingredients = []
 
             for _u in range(ingredients_count):
@@ -23,19 +30,21 @@ def read_recipes(file_path):
 
     return cook_book
 
-def get_shop_list_by_dishes(dishes, person_count):
+def get_shop_list_by_dishes(dishes, person_count, cook_book):
     """Формирует список ингредиентов для указанных блюд и количества персон"""
     shop_list = {}
     for dish in dishes:
-        if dish in cook_book:
-            for ingredient in cook_book[dish]:
-                ingredient_name = ingredient['ingredient_name']
-                quantity = ingredient['quantity'] * person_count
+        if dish not in cook_book:
+            print(f"Блюдо '{dish}' не найдено в книге рецептов.")
+            continue
+        for ingredient in cook_book[dish]:
+            ingredient_name = ingredient['ingredient_name']
+            quantity = ingredient['quantity'] * person_count
 
-                if ingredient_name in shop_list:
-                    shop_list[ingredient_name]['quantity'] += quantity
-                else:
-                    shop_list[ingredient_name] = {'measure': ingredient['measure'],
+            if ingredient_name in shop_list:
+                shop_list[ingredient_name]['quantity'] += quantity
+            else:
+                shop_list[ingredient_name] = {'measure': ingredient['measure'],
                                                   'quantity': quantity}
     return shop_list
 
@@ -50,4 +59,5 @@ print()
 # Вызов функции для получения списка покупок
 dishes =['Запеченный картофель', 'Омлет']
 person_count = 2
-pprint(get_shop_list_by_dishes(dishes, person_count))
+shop_list = get_shop_list_by_dishes(dishes, person_count, cook_book)
+pprint(shop_list)
